@@ -11,6 +11,7 @@ const Task = ({ todos }) =>{
                     <button className="icon icon-edit"></button>
                     <button className="icon icon-destroy"></button>
                 </div>
+                <input type="text" className="edit" value="Editing task"/>
             </li>
         );
     }));

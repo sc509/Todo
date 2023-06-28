@@ -59,7 +59,7 @@
 }
 
 .todo-list li.editing .view {
-    display: block;
+    display: none;
 }
 
 .todo-list li .toggle {

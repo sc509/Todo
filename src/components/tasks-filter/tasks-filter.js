@@ -1,7 +1,12 @@
 import "./tasks-filter.css"
 import {Component} from "react";
-
+import PropTypes from "prop-types";
 export default class TasksFilter extends Component{
+    static defaultProps = {
+        completedItem: () => {},
+        activeItem: () => {},
+        showAllItem: () => {}
+    };
     render() {
         const { completedItem, activeItem, showAllItem} = this.props;
         return (
@@ -19,3 +24,9 @@ export default class TasksFilter extends Component{
         );
     }
 }
+
+TasksFilter.propTypes = {
+    completedItem: PropTypes.func,
+    activeItem: PropTypes.func,
+    showAllItem: PropTypes.func
+};

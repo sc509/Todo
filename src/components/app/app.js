@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { formatDistanceToNow } from "date-fns";
 import "./app.css";
 import NewTaskForm from "../new-task-form/new-task-form";
 import TaskList from "../task-list/task-list";
@@ -19,14 +20,17 @@ export default class App extends Component{
     };
 
     createTodoItem(text) {
+        const created = new Date();
         return{
             status: "Active task",
             description: text,
-            created: 'created 17 seconds ago',
+            created: created,
             complete:false,
             id: this.maxId++
         }
     }
+
+
 
     deleteItem = (id) => {
         this.setState(({ todoData }) => {
@@ -95,16 +99,24 @@ export default class App extends Component{
         };
 
 
+
+
     render() {
         const completedCount = this.state.todoData.filter(completed => completed.complete).length
         const todoCount = this.state.todoData.length - completedCount;
         const { todoData, filter } = this.state;
-        const visibleItems = todoData.filter(item => {
+        const visibleItems = todoData.map(item => {
+            const createdTimeString = `created ${formatDistanceToNow(item.created, { includeSeconds: true })} ago`;
+            return {
+                ...item,
+                created: createdTimeString
+            };
+        }).filter(item => {
             switch (filter) {
                 case 'Active task':
                     return !item.complete;
                 case 'completed':
-                    return item.complete;
+                    return item.complete
                 default:
                     return true;
             }

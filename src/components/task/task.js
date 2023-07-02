@@ -1,22 +1,13 @@
 import { Component } from "react";
 
 export default class Task extends Component {
-    state = {
-        complete: false
-    };
 
-    onLabelClick = () => {
-        this.setState(prevState => ({
-            complete: !prevState.complete
-        }));
-    };
 
     render() {
-        const { todo, onDeleted } = this.props;
-        const { complete } = this.state;
-
+        const { todo, onDeleted, onToggleCompleted} = this.props;
+        const complete = todo.complete
         let classNames = todo.status;
-        if (complete) {
+        if (todo.complete) {
             classNames = 'completed';
         } else if (classNames !== "editing") {
             classNames = "Active Task";
@@ -25,8 +16,8 @@ export default class Task extends Component {
         return (
             <li className={classNames}>
                 <div className="view">
-                    <input className="toggle" type="checkbox" checked={complete} onChange={this.onLabelClick} />
-                    <label onClick={this.onLabelClick}>
+                    <input className="toggle" type="checkbox" checked={complete} onClick={() => onToggleCompleted(todo.id)} />
+                    <label>
                         <span className="description">{todo.description}</span>
                         <span className="created">{todo.created}</span>
                     </label>

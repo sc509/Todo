@@ -5,21 +5,26 @@ export default class NewTaskForm extends Component {
   state = {
     label: '',
   };
+
   onLabelChange = (e) => {
+    const { value } = e.target;
     this.setState({
-      label: e.target.value,
+      label: value,
     });
   };
 
   onSubmit = (e) => {
     e.preventDefault();
-    this.props.onItemAdded(this.state.label);
+    const { onItemAdded } = this.props;
+    const { label } = this.state;
+    onItemAdded(label);
     this.setState({
       label: '',
     });
   };
 
   render() {
+    const { label } = this.state;
     return (
       <header className="header">
         <h1>todos</h1>
@@ -27,9 +32,8 @@ export default class NewTaskForm extends Component {
           <input
             className="new-todo"
             placeholder="What needs to be done?"
-            autoFocus
             onChange={this.onLabelChange}
-            value={this.state.label}
+            value={label}
           />
         </form>
       </header>

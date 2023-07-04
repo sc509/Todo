@@ -1,9 +1,11 @@
-import { formatDistanceToNow } from 'date-fns';
 import React, { Component } from 'react';
-import './app.css';
+import { formatDistanceToNow } from 'date-fns';
+
 import NewTaskForm from '../new-task-form/new-task-form';
 import TaskList from '../task-list/task-list';
 import Footer from '../footer/footer';
+
+import './app.css';
 
 export default class App extends Component {
   maxId = 100;
@@ -16,17 +18,6 @@ export default class App extends Component {
       this.createTodoItem('Learn NextJs'),
     ],
     filter: 'all',
-  };
-
-  createTodoItem(text) {
-    const created = new Date();
-    return {
-      status: 'Active task',
-      description: text,
-      created: created,
-      complete: false,
-      id: this.maxId++,
-    };
   };
 
   deleteItem = (id) => {
@@ -62,6 +53,15 @@ export default class App extends Component {
     });
   };
 
+  deleteComplete = () => {
+    this.setState(({ todoData }) => {
+      const result = todoData.filter((completed) => !completed.complete);
+      return {
+        todoData: result,
+      };
+    });
+  };
+
   completedItem = () => {
     this.setState({ filter: 'completed' });
   };
@@ -74,20 +74,22 @@ export default class App extends Component {
     this.setState({ filter: 'all' });
   };
 
-  deleteComplete = () => {
-    this.setState(({ todoData }) => {
-      const result = todoData.filter((completed) => !completed.complete);
-
-      return {
-        todoData: result,
-      };
-    });
-  };
+  createTodoItem(text) {
+    const created = new Date();
+    return {
+      status: 'Active task',
+      description: text,
+      created,
+      complete: false,
+      id: this.maxId++,
+    };
+  }
 
   render() {
-    const completedCount = this.state.todoData.filter((completed) => completed.complete).length;
-    const todoCount = this.state.todoData.length - completedCount;
     const { todoData, filter } = this.state;
+    const completedCount = todoData.filter((completed) => completed.complete).length;
+    const todoCount = todoData.length - completedCount;
+
     const visibleItems = todoData
       .map((item) => {
         const createdTimeString = `created ${formatDistanceToNow(item.created, { includeSeconds: true })} ago`;

@@ -31,6 +31,10 @@ export default class App extends Component {
   };
 
   addItem = (text) => {
+    if (!text || text.trim() === '') {
+      return;
+    }
+
     const newItem = this.createTodoItem(text);
 
     this.setState(({ todoData }) => {
@@ -87,9 +91,7 @@ export default class App extends Component {
 
   render() {
     const { todoData, filter } = this.state;
-    const completedCount = todoData.filter((completed) => completed.complete).length;
-    const todoCount = todoData.length - completedCount;
-
+    const todoCount = todoData.filter((task) => !task.complete).length;
     const visibleItems = todoData
       .map((item) => {
         const createdTimeString = `created ${formatDistanceToNow(item.created, { includeSeconds: true })} ago`;
@@ -120,6 +122,7 @@ export default class App extends Component {
             showAllItem={this.showAllItem}
             deleteComplete={this.deleteComplete}
             todoCount={todoCount}
+            currentFilter={filter}
           />
         </section>
       </section>

@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import './footer.css';
 import TasksFilter from '../tasks-filter/tasks-filter';
 
-function Footer({ completedItem, activeItem, showAllItem, deleteComplete, todoCount }) {
+function Footer({ completedItem, activeItem, showAllItem, deleteComplete, todoCount, currentFilter }) {
   return (
     <footer className="footer">
       <span className="todo-count">{todoCount} items left</span>
-      <TasksFilter completedItem={completedItem} activeItem={activeItem} showAllItem={showAllItem} />
+      <TasksFilter
+        completedItem={completedItem}
+        activeItem={activeItem}
+        showAllItem={showAllItem}
+        currentFilter={currentFilter}
+      />
       <button type="button" className="clear-completed" onClick={deleteComplete}>
         Clear completed
       </button>

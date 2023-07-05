@@ -13,19 +13,13 @@ function Task({ todo, onDeleted, onToggleCompleted }) {
   return (
     <li className={classNames}>
       <div className="view">
-        <input
-          className="toggle"
-          type="checkbox"
-          defaultChecked={complete}
-          onClick={() => onToggleCompleted(todo.id)}
-          id="toggle"
-        />
+        <input className="toggle" type="checkbox" defaultChecked={complete} onClick={onToggleCompleted} id="toggle" />
         <label htmlFor="toggle">
           <span className="description">{todo.description}</span>
           <span className="created">{todo.created}</span>
         </label>
         <button type="button" className="icon icon-edit" />
-        <button type="button" className="icon icon-destroy" onClick={() => onDeleted(todo.id)} />
+        <button type="button" className="icon icon-destroy" onClick={onDeleted} />
       </div>
       <input type="text" className="edit" defaultValue="Editing task" />
     </li>

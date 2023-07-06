@@ -13,7 +13,14 @@ function Task({ todo, onDeleted, onToggleCompleted }) {
   return (
     <li className={classNames}>
       <div className="view">
-        <input className="toggle" type="checkbox" defaultChecked={complete} onClick={onToggleCompleted} id="toggle" />
+        <input
+          className="toggle"
+          type="checkbox"
+          defaultChecked={complete}
+          onClick={onToggleCompleted}
+          id="toggle"
+          required
+        />
         <label htmlFor="toggle">
           <span className="description">{todo.description}</span>
           <span className="created">{todo.created}</span>

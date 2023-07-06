@@ -31,7 +31,7 @@ export default class App extends Component {
   };
 
   addItem = (text) => {
-    if (!text) {
+    if (text.trim() === '') {
       return;
     }
 

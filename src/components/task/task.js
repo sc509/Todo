@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
+import './task.css';
 
-function Task({ todo, onDeleted, onToggleCompleted }) {
+function Task({ todo, onDeleted, onToggleCompleted, startTimer, stopTimer }) {
   const { complete, status } = todo;
 
   let classNames = status;
@@ -10,20 +11,28 @@ function Task({ todo, onDeleted, onToggleCompleted }) {
     classNames = 'Active Task';
   }
 
+  const handleToggle = () => {
+    onToggleCompleted(todo.id);
+  };
+
+  const uniqueId = `toggle${todo.id}`;
+
   return (
     <li className={classNames}>
       <div className="view">
-        <input
-          className="toggle"
-          type="checkbox"
-          defaultChecked={complete}
-          onClick={onToggleCompleted}
-          id="toggle"
-          required
-        />
-        <label htmlFor="toggle">
+        <input className="toggle" type="checkbox" checked={complete} onClick={handleToggle} id={uniqueId} required />
+        <label>
           <span className="description">{todo.description}</span>
-          <span className="created">{todo.created}</span>
+          <span className="created">
+            {todo.created}
+            <button type="button" className="icon icon-play" onClick={startTimer} />
+            <button type="button" className="icon icon-pause" onClick={stopTimer} />
+            <span>{`${Math.floor(todo.time / 60)
+              .toString()
+              .padStart(2, '0')}:${Math.floor(todo.time % 60)
+              .toString()
+              .padStart(2, '0')}`}</span>
+          </span>
         </label>
         <button type="button" className="icon icon-edit" />
         <button type="button" className="icon icon-destroy" onClick={onDeleted} />

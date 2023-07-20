@@ -31,19 +31,19 @@ export default class NewTaskForm extends Component {
     });
   };
 
-  onClickEnter = (e) => {
+  onSubmit = (e) => {
+    e.preventDefault();
+
     const { label, min, sec } = this.state;
     const { onItemAdded } = this.props;
 
-    if (e.keyCode === 13) {
-      const time = (parseInt(min, 10) || 0) * 60 + (parseInt(sec, 10) || 0);
-      onItemAdded(label, time);
-      this.setState({
-        label: '',
-        min: '',
-        sec: '',
-      });
-    }
+    const time = (parseInt(min, 10) || 0) * 60 + (parseInt(sec, 10) || 0);
+    onItemAdded(label, time);
+    this.setState({
+      label: '',
+      min: '',
+      sec: '',
+    });
   };
 
   render() {
@@ -52,13 +52,14 @@ export default class NewTaskForm extends Component {
     return (
       <header className="header">
         <h1>todos</h1>
-        <form className="new-todo-form" onKeyDown={this.onClickEnter}>
+        <form className="new-todo-form" onSubmit={this.onSubmit}>
           <input
             className="new-todo"
             type="text"
             placeholder="What needs to be done?"
             onChange={this.onLabelChange}
             value={label}
+            required
           />
           <input
             type="text"
@@ -66,6 +67,8 @@ export default class NewTaskForm extends Component {
             placeholder="Sec"
             value={sec}
             onChange={this.onSecChange}
+            pattern="\d*"
+            title="Please enter only numbers."
           />
           <input
             type="text"
@@ -73,7 +76,10 @@ export default class NewTaskForm extends Component {
             placeholder="Min"
             value={min}
             onChange={this.onMinChange}
+            pattern="\d*"
+            title="Please enter only numbers."
           />
+          <input type="submit" style={{ display: 'none' }} />
         </form>
       </header>
     );

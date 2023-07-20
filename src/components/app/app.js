@@ -84,60 +84,17 @@ export default class App extends Component {
     this.setState({ filter: 'all' });
   };
 
-  startTimer = (id) => {
-    this.setState((state) => {
-      const idx = state.todoData.findIndex((el) => el.id === id);
-      const oldItem = state.todoData[idx];
-      if (oldItem.timerId != null) {
-        return {};
-      }
-      const timerId = setInterval(() => {
-        this.setState((currentState) => {
-          const currentIdx = currentState.todoData.findIndex((el) => el.id === id);
-          const currentOldItem = currentState.todoData[currentIdx];
-          if (currentOldItem.time <= 1) {
-            clearInterval(timerId);
-            const newItem = { ...currentOldItem, time: 0, timerId: null };
-            const newArray = [
-              ...currentState.todoData.slice(0, currentIdx),
-              newItem,
-              ...currentState.todoData.slice(currentIdx + 1),
-            ];
-            return {
-              todoData: newArray,
-            };
-          }
-          const newItem = { ...currentOldItem, time: currentOldItem.time - 1 };
-          const newArray = [
-            ...currentState.todoData.slice(0, currentIdx),
-            newItem,
-            ...currentState.todoData.slice(currentIdx + 1),
-          ];
-          return {
-            todoData: newArray,
-          };
-        });
-      }, 1000);
-      const newItem = { ...oldItem, timerId };
-      const newArray = [...state.todoData.slice(0, idx), newItem, ...state.todoData.slice(idx + 1)];
-      return {
-        todoData: newArray,
-      };
-    });
-  };
+  onTimeDecrease = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = todoData[idx];
 
-  stopTimer = (id) => {
-    this.setState((state) => {
-      const idx = state.todoData.findIndex((el) => el.id === id);
-      const oldItem = state.todoData[idx];
-      if (oldItem.timerId == null) {
-        return {};
-      }
-      clearInterval(oldItem.timerId);
-      const newItem = { ...oldItem, timerId: null };
-      const newArray = [...state.todoData.slice(0, idx), newItem, ...state.todoData.slice(idx + 1)];
+      const newTime = oldItem.time > 0 ? oldItem.time - 1 : 0;
+
+      const newItem = { ...oldItem, time: newTime };
+
       return {
-        todoData: newArray,
+        todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
       };
     });
   };
@@ -184,8 +141,7 @@ export default class App extends Component {
             todoData={visibleItems}
             onDeleted={this.deleteItem}
             onToggleCompleted={this.onToggleCompleted}
-            startTimer={this.startTimer}
-            stopTimer={this.stopTimer}
+            onTimeDecrease={this.onTimeDecrease}
           />
           <Footer
             completedItem={this.completedItem}

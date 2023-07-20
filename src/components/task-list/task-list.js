@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Task from '../task/task';
 import './task-list.css';
 
-function TaskList({ todoData, onDeleted, onToggleCompleted, startTimer, stopTimer }) {
+function TaskList({ todoData, onDeleted, onToggleCompleted, onTimeDecrease }) {
   return (
     <ul className="todo-list">
       {todoData.map((todo) => (
@@ -13,8 +13,7 @@ function TaskList({ todoData, onDeleted, onToggleCompleted, startTimer, stopTime
           todo={todo}
           onDeleted={() => onDeleted(todo.id)}
           onToggleCompleted={() => onToggleCompleted(todo.id)}
-          startTimer={() => startTimer(todo.id)}
-          stopTimer={() => stopTimer(todo.id)}
+          onTimeDecrease={() => onTimeDecrease(todo.id)}
         />
       ))}
     </ul>
@@ -31,6 +30,7 @@ TaskList.defaultProps = {
   },
   onDeleted: () => {},
   onToggleCompleted: () => {},
+  onTimeDecrease: () => {},
 };
 
 TaskList.propTypes = {
@@ -40,9 +40,11 @@ TaskList.propTypes = {
     description: PropTypes.string,
     created: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
     id: PropTypes.number,
+    time: PropTypes.number,
   }),
   onDeleted: PropTypes.func,
   onToggleCompleted: PropTypes.func,
+  onTimeDecrease: PropTypes.func,
 };
 
 export default TaskList;

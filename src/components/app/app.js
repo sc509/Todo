@@ -1,105 +1,15 @@
-import React, { Component } from 'react';
 import { formatDistanceToNow } from 'date-fns';
+import { useState } from 'react';
 
 import NewTaskForm from '../new-task-form/new-task-form';
 import TaskList from '../task-list/task-list';
 import Footer from '../footer/footer';
-
 import './app.css';
 
-export default class App extends Component {
-  maxId = 100;
+function App() {
+  let maxId = 100;
 
-  state = {
-    todoData: [
-      this.createTodoItem('Learn React', 10),
-      this.createTodoItem('Learn Angular', 20),
-      this.createTodoItem('Learn Vue', 30),
-      this.createTodoItem('Learn NextJs', 40),
-    ],
-    filter: 'all',
-  };
-
-  deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const oldItem = todoData[idx];
-
-      if (oldItem.timerId != null) {
-        clearInterval(oldItem.timerId);
-      }
-
-      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
-      return {
-        todoData: newArray,
-      };
-    });
-  };
-
-  addItem = (text, time) => {
-    if (text.trim() === '') {
-      return;
-    }
-
-    const newItem = this.createTodoItem(text, time);
-
-    this.setState(({ todoData }) => {
-      const newArr = [...todoData, newItem];
-      return {
-        todoData: newArr,
-      };
-    });
-  };
-
-  onToggleCompleted = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const oldItem = todoData[idx];
-      const newItem = { ...oldItem, complete: !oldItem.complete };
-      const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
-      return {
-        todoData: newArray,
-      };
-    });
-  };
-
-  deleteComplete = () => {
-    this.setState(({ todoData }) => {
-      const result = todoData.filter((completed) => !completed.complete);
-      return {
-        todoData: result,
-      };
-    });
-  };
-
-  completedItem = () => {
-    this.setState({ filter: 'completed' });
-  };
-
-  activeItem = () => {
-    this.setState({ filter: 'Active task' });
-  };
-
-  showAllItem = () => {
-    this.setState({ filter: 'all' });
-  };
-
-  onTimeDecrease = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const oldItem = todoData[idx];
-
-      const newTime = oldItem.time > 0 ? oldItem.time - 1 : 0;
-
-      const newItem = { ...oldItem, time: newTime };
-
-      return {
-        todoData: [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)],
-      };
-    });
-  };
-
-  createTodoItem(text, time) {
+  const createTodoItem = (text, time = 0) => {
     const created = new Date();
     return {
       status: 'Active task',
@@ -107,52 +17,127 @@ export default class App extends Component {
       created,
       time,
       complete: false,
-      id: this.maxId++,
+      id: maxId++,
     };
-  }
+  };
 
-  render() {
-    const { todoData, filter } = this.state;
-    const todoCount = todoData.filter((task) => !task.complete).length;
-    const visibleItems = todoData
-      .map((item) => {
-        const createdTimeString = `created ${formatDistanceToNow(item.created, { includeSeconds: true })} ago`;
-        return {
-          ...item,
-          created: createdTimeString,
-        };
-      })
-      .filter((item) => {
-        switch (filter) {
-          case 'Active task':
-            return !item.complete;
-          case 'completed':
-            return item.complete;
-          default:
-            return true;
-        }
-      });
+  const [todoData, setTodoData] = useState([
+    createTodoItem('Learn React', 20),
+    createTodoItem('Learn Angular', 20),
+    createTodoItem('Learn Vue', 30),
+    createTodoItem('Learn NextJs', 40),
+  ]);
+  const [filter, setFilter] = useState('all');
 
-    return (
-      <section className="todoapp">
-        <NewTaskForm onItemAdded={this.addItem} />
-        <section className="main">
-          <TaskList
-            todoData={visibleItems}
-            onDeleted={this.deleteItem}
-            onToggleCompleted={this.onToggleCompleted}
-            onTimeDecrease={this.onTimeDecrease}
-          />
-          <Footer
-            completedItem={this.completedItem}
-            activeItem={this.activeItem}
-            showAllItem={this.showAllItem}
-            deleteComplete={this.deleteComplete}
-            todoCount={todoCount}
-            currentFilter={filter}
-          />
-        </section>
+  const deleteItem = (id) => {
+    setTodoData((prevState) => {
+      const idx = prevState.findIndex((el) => el.id === id);
+      const oldItem = prevState[idx];
+
+      if (oldItem.timerId != null) {
+        clearInterval(oldItem.timerId);
+      }
+
+      return [...prevState.slice(0, idx), ...prevState.slice(idx + 1)];
+    });
+  };
+
+  const addItem = (text, time) => {
+    if (text.trim() === '') {
+      return;
+    }
+
+    const newItem = createTodoItem(text, time);
+
+    setTodoData((prevState) => {
+      return [...prevState, newItem];
+    });
+  };
+
+  const onToggleCompleted = (id) => {
+    setTodoData((prevState) => {
+      const idx = prevState.findIndex((el) => el.id === id);
+      const oldItem = prevState[idx];
+      const newItem = { ...oldItem, complete: !oldItem.complete };
+      return [...prevState.slice(0, idx), newItem, ...prevState.slice(idx + 1)];
+    });
+  };
+
+  const deleteComplete = () => {
+    setTodoData((prevState) => {
+      return prevState.filter((completed) => !completed.complete);
+    });
+  };
+
+  const completedItem = () => {
+    setFilter('completed');
+  };
+
+  const activeItem = () => {
+    setFilter('Active task');
+  };
+
+  const showAllItem = () => {
+    setFilter('all');
+  };
+
+  const onTimeDecrease = (id) => {
+    setTodoData((prevState) => {
+      const idx = prevState.findIndex((el) => el.id === id);
+      const oldItem = prevState[idx];
+
+      if (!oldItem) {
+        return prevState;
+      }
+
+      const newTime = oldItem.time > 0 ? oldItem.time - 1 : 0;
+
+      const newItem = { ...oldItem, time: newTime };
+      return [...prevState.slice(0, idx), newItem, ...prevState.slice(idx + 1)];
+    });
+  };
+
+  const todoCount = todoData.filter((task) => !task.complete).length;
+  const visibleItems = todoData
+    .map((item) => {
+      const createdTimeString = `created ${formatDistanceToNow(item.created, { includeSeconds: true })} ago`;
+      return {
+        ...item,
+        created: createdTimeString,
+      };
+    })
+    .filter((item) => {
+      switch (filter) {
+        case 'Active task':
+          return !item.complete;
+        case 'completed':
+          return item.complete;
+        default:
+          return true;
+      }
+    });
+
+  return (
+    <section className="todoapp">
+      <NewTaskForm onItemAdded={addItem} />
+      <section className="main">
+        <TaskList
+          todoData={visibleItems}
+          onDeleted={deleteItem}
+          onToggleCompleted={onToggleCompleted}
+          onTimeDecrease={onTimeDecrease}
+        />
+        <Footer
+          completedItem={completedItem}
+          activeItem={activeItem}
+          showAllItem={showAllItem}
+          deleteComplete={deleteComplete}
+          todoCount={todoCount}
+          currentFilter={filter}
+        />
       </section>
-    );
-  }
+    </section>
+  );
 }
+
+export default App;

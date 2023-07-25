@@ -1,89 +1,72 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { useState } from 'react';
 
 import './new-task-form.css';
 
-export default class NewTaskForm extends Component {
-  state = {
-    label: '',
-    sec: '',
-    min: '',
-  };
+function NewTaskForm({ onItemAdded }) {
+  const [label, setLabel] = useState('');
+  const [sec, setSec] = useState('');
+  const [min, setMin] = useState('');
 
-  onLabelChange = (e) => {
+  const onLabelChange = (e) => {
     const { value } = e.target;
-    this.setState({
-      label: value,
-    });
+    setLabel(value);
   };
 
-  onSecChange = (e) => {
+  const onSecChange = (e) => {
     const { value } = e.target;
-    this.setState({
-      sec: value,
-    });
+    setSec(value);
   };
 
-  onMinChange = (e) => {
+  const onMinChange = (e) => {
     const { value } = e.target;
-    this.setState({
-      min: value,
-    });
+    setMin(value);
   };
 
-  onSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-
-    const { label, min, sec } = this.state;
-    const { onItemAdded } = this.props;
 
     const time = (parseInt(min, 10) || 0) * 60 + (parseInt(sec, 10) || 0);
     onItemAdded(label, time);
-    this.setState({
-      label: '',
-      min: '',
-      sec: '',
-    });
+    setLabel('');
+    setMin('');
+    setSec('');
   };
 
-  render() {
-    const { label, min, sec } = this.state;
-
-    return (
-      <header className="header">
-        <h1>todos</h1>
-        <form className="new-todo-form" onSubmit={this.onSubmit}>
-          <input
-            className="new-todo"
-            type="text"
-            placeholder="What needs to be done?"
-            onChange={this.onLabelChange}
-            value={label}
-            required
-          />
-          <input
-            type="text"
-            className="new-todo-form__timer"
-            placeholder="Sec"
-            value={sec}
-            onChange={this.onSecChange}
-            pattern="\d*"
-            title="Please enter only numbers."
-          />
-          <input
-            type="text"
-            className="new-todo-form__timer"
-            placeholder="Min"
-            value={min}
-            onChange={this.onMinChange}
-            pattern="\d*"
-            title="Please enter only numbers."
-          />
-          <input type="submit" style={{ display: 'none' }} />
-        </form>
-      </header>
-    );
-  }
+  return (
+    <header className="header">
+      <h1>todos</h1>
+      <form className="new-todo-form" onSubmit={onSubmit}>
+        <input
+          className="new-todo"
+          type="text"
+          placeholder="What needs to be done?"
+          onChange={onLabelChange}
+          value={label}
+          required
+        />
+        <input
+          type="text"
+          className="new-todo-form__timer"
+          placeholder="Sec"
+          value={sec}
+          onChange={onSecChange}
+          pattern="\d*"
+          title="Please enter only numbers."
+        />
+        <input
+          type="text"
+          className="new-todo-form__timer"
+          placeholder="Min"
+          value={min}
+          onChange={onMinChange}
+          pattern="\d*"
+          title="Please enter only numbers."
+        />
+        <input type="submit" style={{ display: 'none' }} />
+      </form>
+    </header>
+  );
 }
 
 NewTaskForm.defaultProps = {
@@ -93,3 +76,5 @@ NewTaskForm.defaultProps = {
 NewTaskForm.propTypes = {
   onItemAdded: PropTypes.func,
 };
+
+export default NewTaskForm;

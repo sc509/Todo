@@ -91,7 +91,6 @@ function App() {
       }
 
       const newTime = oldItem.time > 0 ? oldItem.time - 1 : 0;
-
       const newItem = { ...oldItem, time: newTime };
       return [...prevState.slice(0, idx), newItem, ...prevState.slice(idx + 1)];
     });

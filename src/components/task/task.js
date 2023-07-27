@@ -34,6 +34,11 @@ function Task({ todo, onDeleted, onToggleCompleted, onTimeDecrease }) {
     onToggleCompleted();
   };
 
+  const handleDelete = () => {
+    stopTimer();
+    onDeleted();
+  };
+
   const uniqueId = `toggle${todo.id}`;
 
   return (
@@ -52,7 +57,7 @@ function Task({ todo, onDeleted, onToggleCompleted, onTimeDecrease }) {
           </span>
         </label>
         <button type="button" className="icon icon-edit" />
-        <button type="button" className="icon icon-destroy" onClick={onDeleted} />
+        <button type="button" className="icon icon-destroy" onClick={handleDelete} />
       </div>
       <input type="text" className="edit" defaultValue="Editing task" />
     </li>

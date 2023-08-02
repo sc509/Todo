@@ -33,6 +33,8 @@
     "quotes": ["error", "single"],
     "semi": "off",
     "react/react-in-jsx-scope": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
     "react/prop-types": 0,
     "react/state-in-constructor": "off",
     "import/no-unresolved": [2, { "caseSensitive": false }],

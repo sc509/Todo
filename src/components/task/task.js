@@ -1,25 +1,30 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import './task.css';
 
 function Task({ todo, onDeleted, onToggleCompleted, onTimeDecrease }) {
-  const timer = useRef(null);
+  const timerId = useRef(null);
 
   const startTimer = () => {
-    if (timer.current === null) {
-      timer.current = setInterval(() => {
+    if (timerId.current === null) {
+      timerId.current = setInterval(() => {
+        console.log('timer');
         onTimeDecrease();
       }, 1000);
     }
   };
 
   const stopTimer = () => {
-    if (timer.current !== null) {
-      clearInterval(timer.current);
-      timer.current = null;
+    if (timerId.current !== null) {
+      clearInterval(timerId.current);
+      timerId.current = null;
     }
   };
+
+  useEffect(() => {
+    return stopTimer;
+  }, []);
 
   const { complete, status } = todo;
 

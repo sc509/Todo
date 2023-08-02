@@ -7,7 +7,7 @@ import Footer from '../footer/footer';
 import './app.css';
 
 function App() {
-  let maxId = 100;
+  const [maxId, setMaxId] = useState(1);
 
   const createTodoItem = (text, time = 0) => {
     const created = new Date();
@@ -17,16 +17,11 @@ function App() {
       created,
       time,
       complete: false,
-      id: maxId++,
+      id: maxId,
     };
   };
 
-  const [todoData, setTodoData] = useState([
-    createTodoItem('Learn React', 20),
-    createTodoItem('Learn Angular', 20),
-    createTodoItem('Learn Vue', 30),
-    createTodoItem('Learn NextJs', 40),
-  ]);
+  const [todoData, setTodoData] = useState([]);
   const [filter, setFilter] = useState('all');
 
   const deleteItem = (id) => {
@@ -48,6 +43,7 @@ function App() {
     }
 
     const newItem = createTodoItem(text, time);
+    setMaxId(maxId + 1);
 
     setTodoData((prevState) => {
       return [...prevState, newItem];
